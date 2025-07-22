@@ -89,13 +89,14 @@ function LostItems() {
               <div style={{marginTop: '0.5rem', width: '100%'}}>
                 <label style={{color: '#e6c200', fontWeight: 500}}>Status: </label>
                 <select
-                  value={item.status || 'Lost'}
+                  value={item.status || 'Declared by client'}
                   onChange={e => handleStatusChange(item._id, e.target.value)}
                   style={{marginLeft: '0.5rem', borderRadius: '6px', border: '1px solid #e6c200', padding: '0.25rem 0.5rem'}}
                 >
-                  <option value='Lost'>Lost</option>
+                  <option value='Found by staff'>Found by staff</option>
+                  <option value='Declared by client'>Declared by client</option>
                   <option value='Found'>Found</option>
-                  <option value='Returned'>Returned</option>
+                  <option value='Delivered'>Delivered</option>
                 </select>
               </div>
             </div>

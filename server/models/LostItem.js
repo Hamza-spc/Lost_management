@@ -7,7 +7,7 @@ const LostItemSchema = new mongoose.Schema({
   placeLastSeen: { type: String, required: true },
   image: { type: String },
   id: { type: String, required: true, unique: true },
-  status: { type: String, enum: ['Lost', 'Found', 'Returned'], default: 'Lost' },
+  status: { type: String, enum: ['Found by staff', 'Declared by client', 'Found', 'Delivered'], default: 'Declared by client' },
   createdAt: { type: Date, default: Date.now }
 });
 

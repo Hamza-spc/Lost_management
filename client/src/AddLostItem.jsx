@@ -10,7 +10,7 @@ function AddLostItem() {
   const [placeLastSeen, setPlaceLastSeen] = useState('');
   const [id, setId] = useState('');
   const [image, setImage] = useState('');
-  const [status, setStatus] = useState('Lost');
+  const [status, setStatus] = useState('Declared by client');
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
@@ -105,9 +105,10 @@ function AddLostItem() {
           <div className='mb-3'>
             <label className='add-lost-item-label'>Status</label>
             <select className='form-control' value={status} onChange={e => setStatus(e.target.value)}>
-              <option value='Lost'>Lost</option>
+              <option value='Found by staff'>Found by staff</option>
+              <option value='Declared by client'>Declared by client</option>
               <option value='Found'>Found</option>
-              <option value='Returned'>Returned</option>
+              <option value='Delivered'>Delivered</option>
             </select>
           </div>
           <div className='mb-3'>

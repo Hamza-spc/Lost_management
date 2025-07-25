@@ -27,6 +27,12 @@ function Home({ logo, language }) {
       >
         {t('checkReports', language)}
       </Link>
+      <Link
+        to='/admin-dashboard'
+        style={{position: 'absolute', top: '6rem', left: '12rem', background: 'rgb(145, 111, 65)', color: '#fff', fontWeight: 'bold', border: 'none', borderRadius: '8px', padding: '0.5rem 1.25rem', textDecoration: 'none', fontSize: '1rem', boxShadow: '0 2px 8px rgba(191, 161, 0, 0.10)'}}
+      >
+        {t('adminDashboard', language)}
+      </Link>
       <h2 style={{color: 'rgb(145, 111, 65)', fontFamily: 'romie, sans-serif', textAlign: 'center', marginBottom: '2.5rem', fontSize: '2.5rem'}}>{t('home', language)}</h2>
       <div style={{display: 'flex', flexWrap: 'wrap', gap: '3rem', justifyContent: 'center', width: '100%'}}>
         {/* Section 1: Check Lost Items */}

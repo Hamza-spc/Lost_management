@@ -6,6 +6,7 @@ import Login from './Login'
 import Home from './Home'
 import AddLostItem from './AddLostItem';
 import LostItems from './LostItems';
+import AdminDashboard from './AdminDashboard';
 import Landing from './Landing';
 import Sidebar from './Sidebar';
 import logoHotel from './assets/logoHotel.png';
@@ -22,6 +23,7 @@ function App() {
         <Route path='/home' element={<Home logo={logoHotel} language={language} setLanguage={setLanguage} />}></Route>
         <Route path='/add-lost-item' element={<AddLostItem logo={logoHotel} language={language} setLanguage={setLanguage} />}></Route>
         <Route path='/lost-items' element={<LostItems logo={logoHotel} language={language} setLanguage={setLanguage} />}></Route>
+        <Route path='/admin-dashboard' element={<AdminDashboard logo={logoHotel} language={language} setLanguage={setLanguage} />}></Route>
       </Routes>
     </BrowserRouter>
   )

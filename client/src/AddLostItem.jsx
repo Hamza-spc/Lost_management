@@ -142,7 +142,6 @@ function AddLostItem({ logo, language }) {
               <select className='form-control' value={status} onChange={e => setStatus(e.target.value)}>
                 <option value='Found by staff'>{t('foundByStaff', language)}</option>
                 <option value='Declared by client'>{t('declaredByClient', language)}</option>
-                <option value='Found'>{t('found', language)}</option>
                 <option value='Delivered'>{t('delivered', language)}</option>
               </select>
             )}

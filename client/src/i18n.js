@@ -58,6 +58,16 @@ const translations = {
     expiration1Month: "1 month",
     expiration1Year: "1 year",
     expirationUnlimited: "Unlimited",
+    adminDashboard: "Admin Dashboard",
+    totalItems: "Total Items",
+    foundItems: "Found Items",
+    deliveredItems: "Delivered Items",
+    pendingItems: "Pending Items",
+    monthlyTrends: "Monthly Trends",
+    statusBreakdown: "Status Breakdown",
+    topCategories: "Top Categories",
+    recentActivity: "Recent Activity",
+    backToHome: "Back to Home",
     // ...add more as needed
   },
   fr: {
@@ -119,6 +129,16 @@ const translations = {
     expiration1Month: "1 mois",
     expiration1Year: "1 an",
     expirationUnlimited: "Illimité",
+    adminDashboard: "Tableau de Bord Admin",
+    totalItems: "Total des Objets",
+    foundItems: "Objets Trouvés",
+    deliveredItems: "Objets Livrés",
+    pendingItems: "Objets en Attente",
+    monthlyTrends: "Tendances Mensuelles",
+    statusBreakdown: "Répartition par Statut",
+    topCategories: "Catégories Principales",
+    recentActivity: "Activité Récente",
+    backToHome: "Retour à l'Accueil",
     // ...add more as needed
   }
 };

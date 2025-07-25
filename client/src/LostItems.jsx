@@ -251,7 +251,6 @@ function LostItems({ logo, language }) {
                   <select name='status' value={editFields.status} onChange={handleEditChange} className='form-control mb-2'>
                     <option value='Found by staff'>{t('foundByStaff', language)}</option>
                     <option value='Declared by client'>{t('declaredByClient', language)}</option>
-                    <option value='Found'>{t('found', language)}</option>
                     <option value='Delivered'>{t('delivered', language)}</option>
                   </select>
                   <select name='expiration' value={editFields.expiration} onChange={handleEditChange} className='form-control mb-2'>
@@ -280,7 +279,6 @@ function LostItems({ logo, language }) {
                     >
                       <option value='Found by staff'>{t('foundByStaff', language)}</option>
                       <option value='Declared by client'>{t('declaredByClient', language)}</option>
-                      <option value='Found'>{t('found', language)}</option>
                       <option value='Delivered'>{t('delivered', language)}</option>
                     </select>
                   </div>

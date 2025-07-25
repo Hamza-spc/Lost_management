@@ -80,12 +80,12 @@ function Landing({ logo, language }) {
           <div style={{fontWeight: 'bold', color: 'rgb(145, 111, 65)', fontFamily: 'romie, sans-serif', fontSize: '1.2rem', marginBottom: '0.5rem'}}>{t('shareOpinion', language)}</div>
           <div style={{display: 'flex', justifyContent: 'center', gap: '2.5rem'}}>
             {/* Google Review */}
-            <a href='https://www.admin.utelys.fr/public/img/page/banner_item/24126_image_1746006821.png' target='_blank' rel='noopener noreferrer' aria-label='Google Review' style={{background: '#fff', borderRadius: '12px', padding: '0.5rem', display: 'inline-block'}}>
-              <img src='https://www.admin.utelys.fr/public/img/page/banner_item/24126_image_1746006821.png' alt='Google Review' style={{width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover', background: '#fff'}} />
+            <a href='https://www.google.com/maps/place//data=!4m3!3m2!1s0xdafee58becf2b5d:0x5ee3f0249e2dd3c0!12e1?source=g.page.m._&laa=merchant-review-solicitation' target='_blank' rel='noopener noreferrer' aria-label='Google Review' style={{background: '#fff', borderRadius: '12px', padding: '0.5rem', display: 'inline-block'}}>
+              <img src='https://www.admin.utelys.fr/public/img/page/banner_item/24126_image_1746006821.png' alt='Google Review' style={{width: '64px', height: '64px', borderRadius: '8px', objectFit: 'cover', background: '#fff'}} />
             </a>
             {/* TripAdvisor */}
-            <a href='https://www.admin.utelys.fr/public/img/page/banner_item/24127_image_1746006933.png' target='_blank' rel='noopener noreferrer' aria-label='TripAdvisor' style={{background: '#fff', borderRadius: '12px', padding: '0.5rem', display: 'inline-block'}}>
-              <img src='https://www.admin.utelys.fr/public/img/page/banner_item/24127_image_1746006933.png' alt='TripAdvisor' style={{width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover', background: '#fff'}} />
+            <a href='https://www.tripadvisor.fr/Hotel_Review-g293734-d299685-Reviews-Sofitel_Marrakech_Palais_Imperial_Spa-Marrakech_Marrakech_Safi.html' target='_blank' rel='noopener noreferrer' aria-label='TripAdvisor' style={{background: '#fff', borderRadius: '12px', padding: '0.5rem', display: 'inline-block'}}>
+              <img src='https://www.admin.utelys.fr/public/img/page/banner_item/24127_image_1746006933.png' alt='TripAdvisor' style={{width: '64px', height: '64px', borderRadius: '8px', objectFit: 'cover', background: '#fff'}} />
             </a>
           </div>
         </div>

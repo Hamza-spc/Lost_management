@@ -4,17 +4,19 @@ A full-stack web application for reporting, searching, and managing lost items. 
 
 ## Features
 
-- User registration and login (Sofitel staff only)
-- Add a lost item (with image, description, date/place last seen, status, and expiration)
-- View all lost items in a searchable, filterable list
-- Image upload with default fallback image
-- Status tracking (Lost, Found, Delivered, etc.) with instant updates
-- Responsive, modern UI with a gold/white theme
-- **Bilingual support:** English and French (toggle in sidebar)
-- **Responsive sidebar:** Contact info, language switcher, and quick access
-- **Staff management:** Staff can edit, delete, and set expiration for lost items
-- **Background video:** Beautiful video background on the landing page
-- **AI Image Similarity Search:** Advanced AI-powered visual search for finding similar items
+- **User Authentication**: Secure login/registration system with email domain validation (@sofitel.com)
+- **Role-based Access**: Separate interfaces for staff and clients
+- **Lost Item Management**: Add, view, edit, and delete lost items
+- **Status Tracking**: Track items through different statuses (Declared by client, Found by staff, Delivered)
+- **Image Upload**: Support for item images with preview functionality
+- **Search & Filtering**: Real-time search and date filtering capabilities
+- **Bilingual Support**: Full English and French translation
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **AI Image Similarity Search**: Staff can upload photos to find visually similar items using TensorFlow.js
+- **Auto-generated IDs**: Each item gets a unique identifier automatically
+- **Expiration Management**: Staff can set expiration dates (1 month, 1 year, unlimited)
+- **Professional Styling**: Elegant white and gold theme with custom typography
+- **Admin Dashboard**: Comprehensive analytics dashboard for staff with statistics, charts, and insights
 
 ## Getting Started
 
@@ -70,6 +72,8 @@ A full-stack web application for reporting, searching, and managing lost items. 
 - Switch language (English/French) from the sidebar
 - Enjoy a video background on the landing page
 - Use AI Image Similarity Search to quickly find visually similar items
+- Access the Admin Dashboard for comprehensive analytics and insights
+- Monitor item statuses and track workflow efficiency
 
 ## Project Structure
 
@@ -98,6 +102,29 @@ The application features a powerful AI-powered image similarity search that sign
 ### Benefits
 
 - **Time-Saving:** Instead of manually typing keywords and reading through dozens of item descriptions, staff can find matches visually
+- **Accuracy:** AI-powered visual matching is more precise than text-based searches
+- **Efficiency:** Reduces search time from minutes to seconds
+- **User-Friendly:** Simple upload and click interface for staff
+
+## Admin Dashboard
+
+The application includes a comprehensive analytics dashboard designed specifically for staff to monitor and optimize the lost & found operation:
+
+### Dashboard Features
+
+- **Statistics Overview**: Real-time counts of total items, found items, delivered items, and pending items
+- **Monthly Trends**: Visual charts showing lost item patterns over the last 6 months
+- **Status Breakdown**: Percentage distribution of items by status (Declared by client, Found by staff, Delivered)
+- **Top Categories**: Analysis of most common lost item types (Electronics, Bags/Wallets, Keys/Cards, etc.)
+- **Recent Activity**: Timeline of the latest 10 items added to the system
+- **Auto-categorization**: Items are automatically categorized based on their titles for better analytics
+
+### Benefits
+
+- **Data-Driven Decisions**: Management can identify patterns and optimize processes
+- **Performance Tracking**: Monitor the efficiency of the lost & found operation
+- **Trend Analysis**: Understand seasonal patterns and common item types
+- **Workflow Optimization**: Identify bottlenecks in the item recovery process
 - **Accuracy:** AI can detect subtle visual similarities that keyword searches might miss
 - **Efficiency:** Particularly useful when dealing with similar items (e.g., multiple black phones, similar bags)
 - **User-Friendly:** Simple upload-and-search interface with clear results
@@ -109,6 +136,24 @@ The application features a powerful AI-powered image similarity search that sign
 - Reducing manual search time during busy periods
 - Improving customer service response times
 
+## Status Management
+
+The application uses a streamlined status system to track items through the lost & found workflow:
+
+### Status Options
+
+- **Declared by client**: Initial status when a client reports a lost item
+- **Found by staff**: Status when staff locates an item (either reported by client or found independently)
+- **Delivered**: Final status when an item is successfully returned to its owner
+
+### Workflow
+
+1. **Client reports item** → Status: "Declared by client"
+2. **Staff finds item** → Status: "Found by staff"
+3. **Item returned to owner** → Status: "Delivered"
+
+This simplified workflow eliminates confusion and provides clear tracking of each item's journey through the system.
+
 ## Future Improvements & AI Ideas
 
 - Enhanced image similarity with multiple model support
@@ -116,8 +161,11 @@ The application features a powerful AI-powered image similarity search that sign
 - Automatic tagging or categorization
 - Smart notifications for similar items
 - Chatbot assistant for reporting/searching
-- Admin dashboard and user roles
-- Multi-language support
+- Email notifications for status updates
+- Export functionality (CSV/PDF reports)
+- Mobile app version
+- Push notifications
+- Advanced analytics with predictive insights
 
 ## License
 

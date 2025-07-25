@@ -17,6 +17,9 @@ mongoose.connect('mongodb://127.0.0.1:27017/employee') //connect to the database
 
 app.post('/login', (req, res) => {
     const {email, password} = req.body;
+    if (!email.endsWith('@sofitel.com')) {
+        return res.status(403).json({ error: 'Only @sofitel.com emails are allowed to log in.' });
+    }
     EmployeeModel.findOne({email: email})
     .then(user => {
         if(user) {
@@ -32,6 +35,10 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
+    const { email } = req.body;
+    if (!email.endsWith('@sofitel.com')) {
+        return res.status(403).json({ error: 'Only employees from sofitel are allowed to register.' });
+    }
     EmployeeModel.create(req.body)
     .then(employees => res.json(employees))
     .catch(err => res.json(err));   
@@ -50,8 +57,14 @@ app.get('/lostitems', (req, res) => {
 });
 
 app.patch('/lostitems/:id', (req, res) => {
-    LostItemModel.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true })
+    LostItemModel.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then(item => res.json(item))
+    .catch(err => res.status(400).json({ error: err.message }));
+});
+
+app.delete('/lostitems/:id', (req, res) => {
+    LostItemModel.findByIdAndDelete(req.params.id)
+    .then(() => res.json({ success: true }))
     .catch(err => res.status(400).json({ error: err.message }));
 });
 

@@ -75,6 +75,7 @@ function LostItems({ logo, language }) {
       description: item.description,
       dateLastSeen: item.dateLastSeen ? item.dateLastSeen.split('T')[0] : '',
       placeLastSeen: item.placeLastSeen,
+      email: item.email || '',
       status: item.status,
       expiration: item.expiration || 'unlimited',
     });
@@ -195,6 +196,9 @@ function LostItems({ logo, language }) {
                   <p style={{marginBottom: '0.5rem'}}><strong>{t('description', language)}:</strong> {item.description}</p>
                   <p style={{marginBottom: '0.5rem'}}><strong>{t('dateLastSeen', language)}:</strong> {item.dateLastSeen ? new Date(item.dateLastSeen).toLocaleDateString() : ''}</p>
                   <p style={{marginBottom: '0.5rem'}}><strong>{t('placeLastSeen', language)}:</strong> {item.placeLastSeen}</p>
+                  {item.email && (
+                    <p style={{marginBottom: '0.5rem'}}><strong>{t('emailLabel', language)}:</strong> {item.email}</p>
+                  )}
                   <div style={{marginTop: '0.5rem', width: '100%'}}>
                     <label style={{color: 'rgb(145, 111, 65)', fontFamily: 'romie, sans-serif', fontWeight: 500}}>{t('status', language)}: </label>
                     <span style={{marginLeft: '0.5rem'}}>{t(item.status === 'Found by staff' ? 'foundByStaff' : item.status === 'Declared by client' ? 'declaredByClient' : item.status.toLowerCase(), language)}</span>
@@ -248,6 +252,7 @@ function LostItems({ logo, language }) {
                   <textarea name='description' value={editFields.description} onChange={handleEditChange} className='form-control mb-2' />
                   <input name='dateLastSeen' type='date' value={editFields.dateLastSeen} onChange={handleEditChange} className='form-control mb-2' />
                   <input name='placeLastSeen' value={editFields.placeLastSeen} onChange={handleEditChange} className='form-control mb-2' />
+                  <input name='email' type='email' value={editFields.email || ''} onChange={handleEditChange} className='form-control mb-2' placeholder={t('emailLabel', language)} />
                   <select name='status' value={editFields.status} onChange={handleEditChange} className='form-control mb-2'>
                     <option value='Found by staff'>{t('foundByStaff', language)}</option>
                     <option value='Declared by client'>{t('declaredByClient', language)}</option>
@@ -270,6 +275,9 @@ function LostItems({ logo, language }) {
                   <p style={{marginBottom: '0.5rem'}}><strong>{t('description', language)}:</strong> {item.description}</p>
                   <p style={{marginBottom: '0.5rem'}}><strong>{t('dateLastSeen', language)}:</strong> {item.dateLastSeen ? new Date(item.dateLastSeen).toLocaleDateString() : ''}</p>
                   <p style={{marginBottom: '0.5rem'}}><strong>{t('placeLastSeen', language)}:</strong> {item.placeLastSeen}</p>
+                  {item.email && (
+                    <p style={{marginBottom: '0.5rem'}}><strong>{t('emailLabel', language)}:</strong> {item.email}</p>
+                  )}
                   <div style={{marginTop: '0.5rem', width: '100%'}}>
                     <label style={{color: '#e6c200', fontWeight: 500}}>{t('status', language)}: </label>
                     <select

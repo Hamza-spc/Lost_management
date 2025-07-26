@@ -10,6 +10,7 @@ function AddLostItem({ logo, language }) {
   const [description, setDescription] = useState('');
   const [dateLastSeen, setDateLastSeen] = useState('');
   const [placeLastSeen, setPlaceLastSeen] = useState('');
+  const [email, setEmail] = useState('');
   const [id, setId] = useState(generateUniqueId());
   const [image, setImage] = useState('');
   const [status, setStatus] = useState('Declared by client');
@@ -48,6 +49,7 @@ function AddLostItem({ logo, language }) {
         description,
         dateLastSeen,
         placeLastSeen,
+        email: isClient ? email : undefined,
         image: image || defaultImage,
         status: isClient ? 'Declared by client' : isStaff ? 'Found by staff' : status,
         expiration: isStaff ? expiration : undefined
@@ -132,6 +134,12 @@ function AddLostItem({ logo, language }) {
             <label className='add-lost-item-label'>{t('placeLastSeen', language)}</label>
             <input type='text' className='form-control' value={placeLastSeen} onChange={e => setPlaceLastSeen(e.target.value)} required />
           </div>
+          {isClient && (
+            <div className='mb-3'>
+              <label className='add-lost-item-label'>{t('emailLabel', language)}</label>
+              <input type='email' className='form-control' value={email} onChange={e => setEmail(e.target.value)} required />
+            </div>
+          )}
           <div className='mb-3'>
             <label className='add-lost-item-label'>{t('status', language)}</label>
             {isClient ? (

@@ -42,21 +42,41 @@ function AddLostItem({ logo, language }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Get client information if user is logged in
+    let clientEmail = email;
+    let clientId = null;
+    if (isClient) {
+      const clientUser = localStorage.getItem('clientUser');
+      if (clientUser) {
+        const user = JSON.parse(clientUser);
+        clientEmail = user.email;
+        clientId = user.id; // This is now the client's MongoDB _id
+        console.log('Client user email:', user.email, 'clientId:', user.id);
+      }
+    }
+    
+    const itemData = {
+      id,
+      title,
+      description,
+      dateLastSeen,
+      placeLastSeen,
+      email: isClient ? email : undefined,
+      clientEmail: isClient ? clientEmail : undefined,
+      clientId: isClient ? clientId : undefined,
+      image: image || defaultImage,
+      status: isClient ? 'Declared by client' : isStaff ? 'Found by staff' : status,
+      expiration: isStaff ? expiration : undefined
+    };
+    
+    console.log('Submitting item data:', itemData);
+    
     try {
-      await axios.post('http://localhost:3001/lostitems', {
-        id,
-        title,
-        description,
-        dateLastSeen,
-        placeLastSeen,
-        email: isClient ? email : undefined,
-        image: image || defaultImage,
-        status: isClient ? 'Declared by client' : isStaff ? 'Found by staff' : status,
-        expiration: isStaff ? expiration : undefined
-      });
+      await axios.post('http://localhost:3001/lostitems', itemData);
       if (isClient) {
         alert('Report sent successfully, the staffs will be notified');
-        navigate('/');
+        navigate('/client-dashboard');
       } else {
         alert('Lost item added successfully!');
         navigate('/home');

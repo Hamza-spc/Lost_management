@@ -13,6 +13,18 @@ function Home({ logo, language }) {
 
   return (
     <div style={{minHeight: '100vh', background: 'linear-gradient(135deg, #fffbe6 0%, #bfa100 100%)', padding: '3rem 1rem', borderRadius: '16px', boxShadow: '0 4px 24px rgba(191, 161, 0, 0.10)', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <style>{`
+        @media (max-width: 768px) {
+          .home-buttons {
+            position: static !important;
+            margin-bottom: 2rem !important;
+            justify-content: center !important;
+          }
+          .home-title {
+            margin-top: 1rem !important;
+          }
+        }
+      `}</style>
       <img src={logo} alt='Hotel Logo' style={{width: '160px', marginBottom: '2rem'}} />
       <button
         onClick={handleLogout}
@@ -20,20 +32,22 @@ function Home({ logo, language }) {
       >
         {t('logout', language)}
       </button>
-      <Link
-        to='/lost-items'
-        state={{ onlyDeclaredByClient: true }}
-        style={{position: 'absolute', top: '6rem', left: '2rem', background: '#bfa100', color: '#fff', fontWeight: 'bold', border: 'none', borderRadius: '8px', padding: '0.5rem 1.25rem', textDecoration: 'none', fontSize: '1rem', boxShadow: '0 2px 8px rgba(191, 161, 0, 0.10)'}}
-      >
-        {t('checkReports', language)}
-      </Link>
-      <Link
-        to='/admin-dashboard'
-        style={{position: 'absolute', top: '6rem', left: '12rem', background: 'rgb(145, 111, 65)', color: '#fff', fontWeight: 'bold', border: 'none', borderRadius: '8px', padding: '0.5rem 1.25rem', textDecoration: 'none', fontSize: '1rem', boxShadow: '0 2px 8px rgba(191, 161, 0, 0.10)'}}
-      >
-        {t('adminDashboard', language)}
-      </Link>
-      <h2 style={{color: 'rgb(145, 111, 65)', fontFamily: 'romie, sans-serif', textAlign: 'center', marginBottom: '2.5rem', fontSize: '2.5rem'}}>{t('home', language)}</h2>
+      <div className="home-buttons" style={{position: 'absolute', top: '6rem', left: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', maxWidth: 'calc(100vw - 4rem)'}}>
+        <Link
+          to='/lost-items'
+          state={{ onlyDeclaredByClient: true }}
+          style={{background: '#bfa100', color: '#fff', fontWeight: 'bold', border: 'none', borderRadius: '8px', padding: '0.5rem 1.25rem', textDecoration: 'none', fontSize: '1rem', boxShadow: '0 2px 8px rgba(191, 161, 0, 0.10)', whiteSpace: 'nowrap'}}
+        >
+          {t('checkReports', language)}
+        </Link>
+        <Link
+          to='/admin-dashboard'
+          style={{background: 'rgb(145, 111, 65)', color: '#fff', fontWeight: 'bold', border: 'none', borderRadius: '8px', padding: '0.5rem 1.25rem', textDecoration: 'none', fontSize: '1rem', boxShadow: '0 2px 8px rgba(191, 161, 0, 0.10)', whiteSpace: 'nowrap'}}
+        >
+          {t('adminDashboard', language)}
+        </Link>
+      </div>
+      <h2 className="home-title" style={{color: 'rgb(145, 111, 65)', fontFamily: 'romie, sans-serif', textAlign: 'center', marginBottom: '2.5rem', fontSize: '2.5rem'}}>{t('home', language)}</h2>
       <div style={{display: 'flex', flexWrap: 'wrap', gap: '3rem', justifyContent: 'center', width: '100%'}}>
         {/* Section 1: Check Lost Items */}
         <section style={{flex: '1 1 350px', background: 'white', borderRadius: '16px', padding: '2rem', boxShadow: '0 2px 8px rgba(191, 161, 0, 0.08)', minHeight: '260px'}}>

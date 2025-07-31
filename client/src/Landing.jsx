@@ -46,10 +46,10 @@ function Landing({ logo, language }) {
             <h2 style={{color: 'rgb(145, 111, 65)', fontFamily: 'romie, sans-serif', marginBottom: '1rem'}}>{t('client', language)}</h2>
             <p style={{color: 'rgb(145, 111, 65)', fontFamily: 'romie, sans-serif', marginBottom: '2rem', textAlign: 'center'}}>{t('clientDesc', language)}</p>
             <button
-              onClick={() => navigate('/add-lost-item', { state: { client: true } })}
+              onClick={() => navigate('/client-login')}
               style={{background: '#bfa100', color: '#fff', fontWeight: 'bold', border: 'none', borderRadius: '8px', padding: '0.75rem 1.5rem', fontSize: '1.1rem', cursor: 'pointer', boxShadow: '0 2px 8px rgba(191, 161, 0, 0.10)'}}
             >
-              {t('reportLostItem', language)}
+              {t('clientLogin', language)}
             </button>
           </div>
         </div>

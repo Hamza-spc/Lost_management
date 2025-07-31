@@ -16,6 +16,11 @@ function LostItems({ logo, language }) {
   const [editFields, setEditFields] = useState({});
   const [aiResults, setAiResults] = useState([]);
   const [aiLoading, setAiLoading] = useState(false);
+  const [aiEmailModal, setAiEmailModal] = useState(false);
+  const [aiEmailItemId, setAiEmailItemId] = useState('');
+  const [aiEmailContent, setAiEmailContent] = useState('');
+  const [aiEmailLoading, setAiEmailLoading] = useState(false);
+  const [activeSection, setActiveSection] = useState('reports'); // 'reports' or 'items'
   const fileInputRef = useRef();
   const location = useLocation();
   const onlyDeclaredByClient = location.state && location.state.onlyDeclaredByClient;
@@ -27,9 +32,21 @@ function LostItems({ logo, language }) {
 
   useEffect(() => {
     let filteredItems = items;
-    if (onlyDeclaredByClient) {
+    
+    // Filter by section
+    if (isStaff) {
+      if (activeSection === 'reports') {
+        // Check Reports: Show only "Declared by client" items
+        filteredItems = filteredItems.filter(item => item.status === 'Declared by client');
+      } else {
+        // View Lost Items: Show "Found by staff" and other statuses (but not "Declared by client")
+        filteredItems = filteredItems.filter(item => item.status !== 'Declared by client');
+      }
+    } else if (onlyDeclaredByClient) {
       filteredItems = filteredItems.filter(item => item.status === 'Declared by client');
     }
+    
+    // Apply search filter
     if (search.trim() !== '') {
       filteredItems = filteredItems.filter(item =>
         item.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -37,6 +54,8 @@ function LostItems({ logo, language }) {
         item.placeLastSeen.toLowerCase().includes(search.toLowerCase())
       );
     }
+    
+    // Apply date filter
     if (dateFilter) {
       filteredItems = filteredItems.filter(item => {
         if (!item.dateLastSeen) return false;
@@ -44,8 +63,9 @@ function LostItems({ logo, language }) {
         return itemDate === dateFilter;
       });
     }
+    
     setFiltered(filteredItems);
-  }, [search, dateFilter, items, onlyDeclaredByClient]);
+  }, [search, dateFilter, items, onlyDeclaredByClient, isStaff, activeSection]);
 
   const fetchItems = async () => {
     try {
@@ -69,7 +89,7 @@ function LostItems({ logo, language }) {
   };
 
   const handleEdit = (item) => {
-    setEditItem(item._id);
+    setEditItem(item.id);
     setEditFields({
       title: item.title,
       description: item.description,
@@ -97,9 +117,12 @@ function LostItems({ logo, language }) {
 
   const handleStatusChange = async (itemId, newStatus) => {
     try {
-      await axios.patch(`http://localhost:3001/lostitems/${itemId}`, { status: newStatus });
+      console.log('Updating status for item:', itemId, 'to:', newStatus);
+      const response = await axios.patch(`http://localhost:3001/lostitems/${itemId}/status`, { status: newStatus });
+      console.log('Status update response:', response.data);
       fetchItems();
     } catch (err) {
+      console.error('Status update error:', err);
       alert('Failed to update status');
     }
   };
@@ -140,11 +163,139 @@ function LostItems({ logo, language }) {
     setAiLoading(false);
   };
 
+  // AI Email Generation
+  const handleAIEmailGeneration = () => {
+    setAiEmailModal(true);
+    setAiEmailItemId('');
+    setAiEmailContent('');
+  };
+
+  const handleAIEmailSubmit = async () => {
+    if (!aiEmailItemId.trim()) {
+      alert('Please enter an item ID');
+      return;
+    }
+
+    setAiEmailLoading(true);
+    try {
+      // Find the item by ID
+      const item = items.find(item => item.id === aiEmailItemId.trim());
+      if (!item) {
+        alert('Item not found. Please check the ID and try again.');
+        setAiEmailLoading(false);
+        return;
+      }
+
+      // Generate professional email content
+      const emailContent = generateProfessionalEmail(item);
+      setAiEmailContent(emailContent);
+    } catch (error) {
+      console.error('Error generating email:', error);
+      alert('Error generating email. Please try again.');
+    } finally {
+      setAiEmailLoading(false);
+    }
+  };
+
+  const generateProfessionalEmail = (item) => {
+    const currentDate = new Date().toLocaleDateString();
+    const hotelName = 'Hotel Management System'; // You can customize this
+    
+    return `Subject: Lost Item Found - ${item.title}
+
+Dear ${item.clientEmail ? item.clientEmail.split('@')[0] : 'Valued Guest'},
+
+We are pleased to inform you that your lost item has been successfully located and is now in our possession.
+
+Item Details:
+• Item: ${item.title}
+• Description: ${item.description}
+• Date Last Seen: ${item.dateLastSeen ? new Date(item.dateLastSeen).toLocaleDateString() : 'Not specified'}
+• Location: ${item.placeLastSeen}
+• Item ID: ${item.id}
+
+Current Status: ${item.status}
+
+Please respond to this email with your preference for receiving your item:
+
+OPTION 1 - Pickup at Hotel:
+• You can collect your item directly from our front desk
+• Please bring a valid ID for verification
+• No additional charges apply
+
+OPTION 2 - Delivery to Your Address:
+• We can deliver your item to your specified address
+• Please include your complete delivery address in your response
+• A delivery fee of $15.00 will apply
+• After confirming your delivery preference, please proceed to the "Pay Delivery Fee" section in our app to complete the payment
+
+Please reply to this email with:
+1. Your choice (Pickup or Delivery)
+2. If choosing delivery, please provide your complete address
+3. Any additional instructions or special requirements
+
+We look forward to hearing from you and will process your request accordingly.
+
+Best regards,
+${hotelName} Staff
+Lost and Found Department
+Date: ${currentDate}
+
+---
+This is an automated email generated by our Lost and Found Management System.`;
+  };
+
+  const copyEmailToClipboard = () => {
+    navigator.clipboard.writeText(aiEmailContent);
+    alert('Email content copied to clipboard!');
+  };
+
   return (
     <div style={{minHeight: '100vh', background: 'linear-gradient(135deg, #fffbe6 0%, #bfa100 100%)', padding: '3rem 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <img src={logo} alt='Hotel Logo' style={{width: '160px', marginBottom: '2rem'}} />
       <div style={{maxWidth: '900px', margin: '0 auto', width: '100%'}}>
-        <h2 style={{color: 'rgb(145, 111, 65)', fontFamily: 'romie, sans-serif', textAlign: 'center', marginBottom: '2rem'}}>{t('viewLostItems', language)}</h2>
+        <h2 style={{color: 'rgb(145, 111, 65)', fontFamily: 'romie, sans-serif', textAlign: 'center', marginBottom: '2rem'}}>
+          {isStaff ? (activeSection === 'reports' ? t('checkReports', language) : t('viewLostItems', language)) : t('viewLostItems', language)}
+        </h2>
+        
+        {/* Section Tabs for Staff */}
+        {isStaff && (
+          <div style={{display: 'flex', justifyContent: 'center', marginBottom: '2rem'}}>
+            <div style={{display: 'flex', background: '#f0f0f0', borderRadius: '8px', padding: '4px'}}>
+              <button
+                onClick={() => setActiveSection('reports')}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '6px',
+                  border: 'none',
+                  background: activeSection === 'reports' ? '#bfa100' : 'transparent',
+                  color: activeSection === 'reports' ? '#fff' : '#666',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {t('checkReports', language)}
+              </button>
+              <button
+                onClick={() => setActiveSection('items')}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '6px',
+                  border: 'none',
+                  background: activeSection === 'items' ? '#bfa100' : 'transparent',
+                  color: activeSection === 'items' ? '#fff' : '#666',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {t('viewLostItems', language)}
+              </button>
+            </div>
+          </div>
+        )}
+        
         <div style={{display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap', alignItems: 'center'}}>
           <input
             type='text'
@@ -176,6 +327,19 @@ function LostItems({ logo, language }) {
                 <svg width='28' height='28' viewBox='0 0 24 24' fill='none'><circle cx='12' cy='12' r='10' stroke='white' strokeWidth='2'/><path d='M8 16v-1a4 4 0 0 1 8 0v1' stroke='white' strokeWidth='2'/><circle cx='12' cy='10' r='2' fill='white'/></svg>
                 <span style={{position: 'absolute', bottom: -28, left: '50%', transform: 'translateX(-50%)', background: '#222', color: '#fff', padding: '0.25rem 0.75rem', borderRadius: 6, fontSize: 12, whiteSpace: 'nowrap', opacity: 0, pointerEvents: 'none', transition: 'opacity 0.2s'}} className='ai-tooltip'>AI</span>
               </button>
+              {activeSection === 'items' && (
+                <button
+                  onClick={handleAIEmailGeneration}
+                  style={{background: '#28a745', color: '#fff', border: 'none', borderRadius: '8px', padding: '0.75rem 1rem', fontSize: '0.9rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem'}}
+                  title='Generate professional email for item'
+                >
+                  <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+                    <path d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'/>
+                    <polyline points='22,6 12,13 2,6'/>
+                  </svg>
+                  AI Email
+                </button>
+              )}
             </>
           )}
         </div>
@@ -239,14 +403,14 @@ function LostItems({ logo, language }) {
         >
           {filtered.length === 0 && <p>{t('noLostItemsFound', language)}</p>}
           {filtered.map(item => (
-            <div key={item._id || item.id} style={{background: 'white', borderRadius: '16px', boxShadow: '0 2px 8px rgba(191, 161, 0, 0.10)', padding: '1.5rem', width: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative'}}>
+            <div key={item.id} style={{background: 'white', borderRadius: '16px', boxShadow: '0 2px 8px rgba(191, 161, 0, 0.10)', padding: '1.5rem', width: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative'}}>
               <img
                 src={item.image ? item.image : NO_IMAGE_URL}
                 alt={item.title}
                 style={{width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem', background: '#f8f8f8'}}
                 onError={e => { e.target.onerror = null; e.target.src = NO_IMAGE_URL; }}
               />
-              {editItem === item._id ? (
+              {editItem === item.id ? (
                 <>
                   <input name='title' value={editFields.title} onChange={handleEditChange} className='form-control mb-2' />
                   <textarea name='description' value={editFields.description} onChange={handleEditChange} className='form-control mb-2' />
@@ -264,7 +428,7 @@ function LostItems({ logo, language }) {
                     <option value='unlimited'>{t('expirationUnlimited', language)}</option>
                   </select>
                   <div style={{display: 'flex', gap: '0.5rem', marginTop: '0.5rem'}}>
-                    <button onClick={() => handleEditSave(item._id)} style={{background: '#bfa100', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 1rem', fontWeight: 'bold', cursor: 'pointer'}}>{t('submit', language)}</button>
+                    <button onClick={() => handleEditSave(item.id)} style={{background: '#bfa100', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 1rem', fontWeight: 'bold', cursor: 'pointer'}}>{t('submit', language)}</button>
                     <button onClick={() => setEditItem(null)} style={{background: '#ccc', color: '#333', border: 'none', borderRadius: '6px', padding: '0.5rem 1rem', fontWeight: 'bold', cursor: 'pointer'}}>Cancel</button>
                   </div>
                 </>
@@ -282,7 +446,7 @@ function LostItems({ logo, language }) {
                     <label style={{color: '#e6c200', fontWeight: 500}}>{t('status', language)}: </label>
                     <select
                       value={item.status || 'Declared by client'}
-                      onChange={e => handleStatusChange(item._id, e.target.value)}
+                      onChange={e => handleStatusChange(item.id, e.target.value)}
                       style={{marginLeft: '0.5rem', borderRadius: '6px', border: '1px solid #e6c200', padding: '0.25rem 0.5rem'}}
                     >
                       <option value='Found by staff'>{t('foundByStaff', language)}</option>
@@ -297,7 +461,7 @@ function LostItems({ logo, language }) {
                   {isStaff && (
                     <div style={{display: 'flex', gap: '0.5rem', marginTop: '1rem'}}>
                       <button onClick={() => handleEdit(item)} style={{background: '#bfa100', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 1rem', fontWeight: 'bold', cursor: 'pointer'}}>Modify</button>
-                      <button onClick={() => handleDelete(item._id)} style={{background: '#e74c3c', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 1rem', fontWeight: 'bold', cursor: 'pointer'}}>Delete</button>
+                      <button onClick={() => handleDelete(item.id)} style={{background: '#e74c3c', color: '#fff', border: 'none', borderRadius: '6px', padding: '0.5rem 1rem', fontWeight: 'bold', cursor: 'pointer'}}>Delete</button>
                     </div>
                   )}
                 </>
@@ -306,6 +470,181 @@ function LostItems({ logo, language }) {
           ))}
         </div>
       </div>
+
+      {/* AI Email Generation Modal */}
+      {aiEmailModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '12px',
+            padding: '2rem',
+            maxWidth: '600px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '1.5rem'
+            }}>
+              <h3 style={{color: 'rgb(145, 111, 65)', fontFamily: 'romie, sans-serif', margin: 0}}>
+                🤖 AI Email Generator
+              </h3>
+              <button
+                onClick={() => setAiEmailModal(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  color: '#666'
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            {!aiEmailContent ? (
+              <div>
+                <p style={{marginBottom: '1rem', color: '#666'}}>
+                  Enter the item ID to generate a professional email for the client.
+                </p>
+                <div style={{marginBottom: '1.5rem'}}>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'rgb(145, 111, 65)'}}>
+                    Item ID (e.g., ITEM-MDRER3D6-VSFUY):
+                  </label>
+                  <input
+                    type='text'
+                    value={aiEmailItemId}
+                    onChange={(e) => setAiEmailItemId(e.target.value)}
+                    placeholder='Enter item ID here...'
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem',
+                      borderRadius: '8px',
+                      border: '1px solid #e6c200',
+                      fontSize: '1rem'
+                    }}
+                  />
+                </div>
+                <div style={{display: 'flex', gap: '1rem', justifyContent: 'flex-end'}}>
+                  <button
+                    onClick={() => setAiEmailModal(false)}
+                    style={{
+                      background: '#ccc',
+                      color: '#333',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '0.75rem 1.5rem',
+                      fontWeight: 'bold',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAIEmailSubmit}
+                    disabled={aiEmailLoading}
+                    style={{
+                      background: aiEmailLoading ? '#ccc' : '#28a745',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '0.75rem 1.5rem',
+                      fontWeight: 'bold',
+                      cursor: aiEmailLoading ? 'not-allowed' : 'pointer'
+                    }}
+                  >
+                    {aiEmailLoading ? 'Generating...' : 'Generate Email'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div style={{marginBottom: '1.5rem'}}>
+                  <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: 'rgb(145, 111, 65)'}}>
+                    Generated Email:
+                  </label>
+                  <textarea
+                    value={aiEmailContent}
+                    readOnly
+                    style={{
+                      width: '100%',
+                      height: '300px',
+                      padding: '1rem',
+                      borderRadius: '8px',
+                      border: '1px solid #e6c200',
+                      fontSize: '0.9rem',
+                      fontFamily: 'monospace',
+                      resize: 'vertical'
+                    }}
+                  />
+                </div>
+                <div style={{display: 'flex', gap: '1rem', justifyContent: 'flex-end'}}>
+                  <button
+                    onClick={() => {
+                      setAiEmailContent('');
+                      setAiEmailItemId('');
+                    }}
+                    style={{
+                      background: '#bfa100',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '0.75rem 1.5rem',
+                      fontWeight: 'bold',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Generate Another
+                  </button>
+                  <button
+                    onClick={copyEmailToClipboard}
+                    style={{
+                      background: '#007bff',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '0.75rem 1.5rem',
+                      fontWeight: 'bold',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Copy to Clipboard
+                  </button>
+                  <button
+                    onClick={() => setAiEmailModal(false)}
+                    style={{
+                      background: '#6c757d',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '0.75rem 1.5rem',
+                      fontWeight: 'bold',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

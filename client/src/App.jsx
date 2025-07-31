@@ -9,6 +9,11 @@ import LostItems from './LostItems';
 import AdminDashboard from './AdminDashboard';
 import Landing from './Landing';
 import Sidebar from './Sidebar';
+import ClientLogin from './ClientLogin';
+import ClientDashboard from './ClientDashboard';
+import ClientItems from './ClientItems';
+import DeliveryForm from './DeliveryForm';
+import PaymentOptions from './PaymentOptions';
 import logoHotel from './assets/logoHotel.png';
 
 function App() {
@@ -24,6 +29,11 @@ function App() {
         <Route path='/add-lost-item' element={<AddLostItem logo={logoHotel} language={language} setLanguage={setLanguage} />}></Route>
         <Route path='/lost-items' element={<LostItems logo={logoHotel} language={language} setLanguage={setLanguage} />}></Route>
         <Route path='/admin-dashboard' element={<AdminDashboard logo={logoHotel} language={language} setLanguage={setLanguage} />}></Route>
+        <Route path='/client-login' element={<ClientLogin language={language} />}></Route>
+        <Route path='/client-dashboard' element={<ClientDashboard language={language} />}></Route>
+        <Route path='/client-items' element={<ClientItems language={language} />}></Route>
+        <Route path='/delivery-form' element={<DeliveryForm language={language} />}></Route>
+        <Route path='/payment-options' element={<PaymentOptions language={language} />}></Route>
       </Routes>
     </BrowserRouter>
   )

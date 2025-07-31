@@ -274,4 +274,4 @@ For support and questions:
 
 ---
 
-**Built with ❤️ using React, Node.js, Express, MongoDB, and Stripe**
+MERN STACK + Stripe OAuth

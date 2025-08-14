@@ -1,0 +1,21 @@
+{
+  "watch": ["index.js", "models/"],
+  "ignore": [
+    "node_modules/**/node_modules",
+    "*.log",
+    "*.json",
+    "public/*",
+    "uploads/*",
+    "temp/*",
+    ".git/*",
+    ".DS_Store",
+    ".env*",
+    "package*.json",
+    "nodemon.json"
+  ],
+  "ext": "js",
+  "delay": 2000,
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

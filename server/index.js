@@ -1,11 +1,10 @@
-require('dotenv').config();
+// require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const nodemailer = require('nodemailer');
 const stripe = require('stripe')('sk_test_your_stripe_secret_key_here');
 const EmployeeModel = require('./models/Employee');
 const LostItemModel = require('./models/LostItem');
@@ -15,7 +14,7 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173', 'http://127.0.0.1:3000'],
   credentials: true
 }));
 
@@ -23,61 +22,101 @@ app.use(cors({
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your_session_secret_here',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Set to true if using HTTPS
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
 // Passport configuration
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Email transporter (configure this with your actual Gmail credentials)
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER || 'your_email@gmail.com',
-    pass: process.env.GMAIL_APP_PASSWORD || 'your_app_password_here'
-  }
+
+
+// Start server immediately
+app.listen(3001, () => {
+  console.log('Server is running on port 3001');
 });
 
-// Test email configuration
-transporter.verify(function(error, success) {
-  if (error) {
-    console.log('Email configuration error:', error);
-  } else {
-    console.log('Email server is ready to send messages');
-  }
+// Connect to MongoDB in background
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/employee', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log('Connected to MongoDB');
+})
+.catch((err) => {
+  console.error('MongoDB connection error:', err);
 });
-
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/employee') //connect to the database
     
 
 app.post('/login', (req, res) => {
-    const {email, password} = req.body;
-    if (!email.endsWith('@sofitel.com')) {
-        return res.status(403).json({ error: 'Only @sofitel.com emails are allowed to log in.' });
-    }
-    EmployeeModel.findOne({email: email})
-    .then(user => {
-        if(user) {
-            if(user.password === password) {
-                res.json('Success');
-            } else {
-                res.json('The password is incorrect');
-            }
-        }else {
-            res.json('No record existed');
+    try {
+        const {email, password} = req.body;
+        
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
         }
-    })
+        
+        if (!email.endsWith('@sofitel.com')) {
+            return res.status(403).json({ error: 'Only @sofitel.com emails are allowed to log in.' });
+        }
+        
+        EmployeeModel.findOne({email: email})
+        .then(user => {
+            if(user) {
+                if(user.password === password) {
+                    res.json('Success');
+                } else {
+                    res.json('The password is incorrect');
+                }
+            } else {
+                res.json('No record existed');
+            }
+        })
+        .catch(err => {
+            console.error('Database error during login:', err);
+            res.status(500).json({ error: 'Database error during login' });
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Internal server error during login' });
+    }
 })
 
 app.post('/register', (req, res) => {
-    const { email } = req.body;
-    if (!email.endsWith('@sofitel.com')) {
-        return res.status(403).json({ error: 'Only employees from sofitel are allowed to register.' });
+    try {
+        const { email } = req.body;
+        if (!email.endsWith('@sofitel.com')) {
+            return res.status(403).json({ error: 'Only employees from sofitel are allowed to register.' });
+        }
+        EmployeeModel.create(req.body)
+        .then(employees => res.json(employees))
+        .catch(err => {
+            console.error('Registration error:', err);
+            res.status(500).json({ error: 'Registration failed' });
+        });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ error: 'Internal server error during registration' });
     }
-    EmployeeModel.create(req.body)
-    .then(employees => res.json(employees))
-    .catch(err => res.json(err));   
+});
+
+// Get all employees (for debugging)
+app.get('/employees', (req, res) => {
+    EmployeeModel.find()
+    .then(employees => {
+        console.log('All employees:', employees);
+        res.json(employees);
+    })
+    .catch(err => {
+        console.error('Error fetching employees:', err);
+        res.status(500).json({ error: err.message });
+    });
 });
 
 app.post('/lostitems', (req, res) => {
@@ -108,7 +147,7 @@ app.patch('/lostitems/:id', (req, res) => {
     .catch(err => res.status(400).json({ error: err.message }));
 });
 
-// Update lost item status (for staff) - Enhanced version with email notifications
+// Update lost item status (for staff)
 app.patch('/lostitems/:id/status', async (req, res) => {
     try {
         const { status } = req.body;
@@ -117,43 +156,6 @@ app.patch('/lostitems/:id/status', async (req, res) => {
             { status },
             { new: true }
         );
-
-        // Send email notification to client when item is found
-        if (status === 'Found by staff' && item.clientId) {
-            // Get client information from Client collection
-            const client = await ClientModel.findById(item.clientId);
-            
-            if (client && client.email) {
-                const mailOptions = {
-                    from: process.env.GMAIL_USER || 'your_email@gmail.com',
-                    to: client.email,
-                    subject: 'Your Lost Item Has Been Found!',
-                    html: `
-                        <h3>Great News!</h3>
-                        <p>Hello ${client.name}, your <strong>${item.title}</strong> was found now!</p>
-                        <p><strong>Item:</strong> ${item.title}</p>
-                        <p><strong>Description:</strong> ${item.description}</p>
-                        <p>Please check your app to determine whether you want to pick it up or have it delivered.</p>
-                        <p>You can either:</p>
-                        <ul>
-                            <li>Pick it up at the hotel</li>
-                            <li>Have it delivered to your address (delivery fee applies)</li>
-                        </ul>
-                        <p>Thank you for choosing our service!</p>
-                    `
-                };
-
-                try {
-                    await transporter.sendMail(mailOptions);
-                    console.log('Email notification sent to:', client.email);
-                } catch (emailError) {
-                    console.error('Failed to send email:', emailError);
-                    // Don't fail the request if email fails
-                }
-            } else {
-                console.log('Client not found or no email for clientId:', item.clientId);
-            }
-        }
 
         res.json(item);
     } catch (error) {
@@ -173,16 +175,11 @@ app.post('/api/auth/google', async (req, res) => {
     try {
         const { credential } = req.body;
         
-        // Verify the Google token with Google's API
-        const response = await fetch('https://oauth2.googleapis.com/tokeninfo', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `id_token=${credential}`
-        });
+        // Verify the Google token with Google's API using the correct endpoint
+        const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`);
 
         if (!response.ok) {
+            console.error('Google token verification failed:', response.status, response.statusText);
             throw new Error('Invalid Google token');
         }
 
@@ -190,8 +187,16 @@ app.post('/api/auth/google', async (req, res) => {
         
         // Verify the client ID matches
         if (tokenInfo.aud !== '788765517215-e8lspclub0o40pt514ff8lf45nddnbhi.apps.googleusercontent.com') {
+            console.error('Client ID mismatch:', tokenInfo.aud);
             throw new Error('Invalid client ID');
         }
+        
+        console.log('Token info received:', { 
+            sub: tokenInfo.sub, 
+            email: tokenInfo.email, 
+            name: tokenInfo.name,
+            aud: tokenInfo.aud 
+        });
         
         // Check if client exists, if not create new client
         let client = await ClientModel.findOne({ googleId: tokenInfo.sub });
@@ -226,7 +231,7 @@ app.post('/api/auth/google', async (req, res) => {
         res.json({ user, token });
     } catch (error) {
         console.error('Google OAuth error:', error);
-        res.status(500).json({ error: 'Authentication failed' });
+        res.status(500).json({ error: 'Authentication failed', details: error.message });
     }
 });
 
@@ -283,22 +288,6 @@ app.put('/api/lost-items/:id/pickup', async (req, res) => {
             },
             { new: true }
         );
-
-        // Send email notification to staff
-        const mailOptions = {
-            from: 'your_email@gmail.com',
-            to: 'staff@sofitel.com',
-            subject: 'Pickup Requested - Lost Item',
-            html: `
-                <h3>Pickup Requested</h3>
-                <p><strong>Item:</strong> ${item.title}</p>
-                <p><strong>Description:</strong> ${item.description}</p>
-                <p><strong>Client Email:</strong> ${item.clientEmail}</p>
-                <p><strong>Requested At:</strong> ${new Date().toLocaleString()}</p>
-            `
-        };
-
-        transporter.sendMail(mailOptions);
 
         res.json(item);
     } catch (error) {
@@ -365,34 +354,13 @@ app.patch('/api/lost-items/:id/status', async (req, res) => {
             { new: true }
         );
 
-        // Send email notification to client when item is found
-        if (status === 'Found by staff' && item.clientEmail) {
-            const mailOptions = {
-                from: 'your_email@gmail.com',
-                to: item.clientEmail,
-                subject: 'Your Lost Item Has Been Found!',
-                html: `
-                    <h3>Great News!</h3>
-                    <p>Your lost item has been found by our staff.</p>
-                    <p><strong>Item:</strong> ${item.title}</p>
-                    <p><strong>Description:</strong> ${item.description}</p>
-                    <p>Please log in to your account to choose how you would like to receive your item.</p>
-                    <p>You can either pick it up at the hotel or have it delivered to your address.</p>
-                `
-            };
-
-            transporter.sendMail(mailOptions);
-        }
-
         res.json(item);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-app.listen(3001, () => {
-    console.log('Server is running on port 3001');
-});
+
 
 
 

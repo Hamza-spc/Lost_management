@@ -1,6 +1,6 @@
 const translations = {
   en: {
-    lostItemsApp: "Lost Items App",
+    lostItemsApp: "Lost and Found App",
     staff: "Staff",
     staffDesc: "Add or check lost items (must be a Sofitel employee!)",
     staffLogin: "Staff Login",
@@ -86,7 +86,7 @@ const translations = {
     // ...add more as needed
   },
   fr: {
-    lostItemsApp: "Application Objets Perdus",
+    lostItemsApp: "Application Objets Perdus et Trouvés",
     staff: "Personnel",
     staffDesc: "Ajouter ou consulter des objets trouvés (réservé aux employés Sofitel !)",
     staffLogin: "Connexion Personnel",

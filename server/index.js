@@ -1,4 +1,4 @@
-// require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -35,21 +35,21 @@ app.use(passport.session());
 
 
 
-// Start server immediately
-app.listen(3001, () => {
-  console.log('Server is running on port 3001');
-});
-
-// Connect to MongoDB in background
+// Connect to MongoDB first, then start server
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/employee', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
 .then(() => {
   console.log('Connected to MongoDB');
+  // Start server only after MongoDB connection is successful
+  app.listen(3001, () => {
+    console.log('Server is running on port 3001');
+  });
 })
 .catch((err) => {
   console.error('MongoDB connection error:', err);
+  process.exit(1);
 });
     
 

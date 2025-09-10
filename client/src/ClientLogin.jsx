@@ -118,12 +118,12 @@ function ClientLogin({ language }) {
       <style jsx>{`
         .client-login-page {
           min-height: 100vh;
-          background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+          background: linear-gradient(135deg, #d4b800 0%, #bfa100 100%);
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: var(--spacing-lg);
+          padding: 1.5rem;
           position: relative;
           overflow: hidden;
         }
@@ -159,7 +159,7 @@ function ClientLogin({ language }) {
         
         .logo-section {
           text-align: center;
-          margin-bottom: var(--spacing-2xl);
+          margin-bottom: 3rem;
         }
         
         .hotel-logo {
@@ -170,16 +170,17 @@ function ClientLogin({ language }) {
         
         .client-login-card {
           width: 100%;
-          padding: var(--spacing-3xl);
+          padding: 3rem;
           background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(20px);
           border: 1px solid rgba(255, 255, 255, 0.2);
-          box-shadow: var(--shadow-xl);
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
           text-align: center;
+          border-radius: 1.5rem;
         }
         
         .card-header {
-          margin-bottom: var(--spacing-2xl);
+          margin-bottom: 3rem;
           border-bottom: none;
           padding-bottom: 0;
         }
@@ -187,50 +188,50 @@ function ClientLogin({ language }) {
         .client-login-title {
           font-size: 2rem;
           font-weight: 700;
-          margin-bottom: var(--spacing-md);
-          color: var(--secondary);
-          background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+          margin-bottom: 1rem;
+          color: #917143;
+          background: linear-gradient(135deg, #917143 0%, #bfa100 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
         
         .client-login-subtitle {
-          color: var(--gray-600);
+          color: #495057;
           font-size: 1rem;
           margin: 0;
           line-height: 1.6;
         }
         
         .google-login-section {
-          margin-bottom: var(--spacing-2xl);
+          margin-bottom: 3rem;
         }
         
         .test-login-section {
-          margin-top: var(--spacing-2xl);
-          padding-top: var(--spacing-2xl);
-          border-top: 1px solid var(--gray-100);
-          margin-bottom: var(--spacing-2xl);
+          margin-top: 3rem;
+          padding-top: 3rem;
+          border-top: 1px solid #e9ecef;
+          margin-bottom: 3rem;
         }
         
         .test-login-text {
-          color: var(--gray-500);
+          color: #6c757d;
           font-size: 0.9rem;
-          margin-bottom: var(--spacing-md);
+          margin-bottom: 1rem;
         }
         
         .client-login-footer {
-          padding-top: var(--spacing-lg);
-          border-top: 1px solid var(--gray-100);
+          padding-top: 1.5rem;
+          border-top: 1px solid #e9ecef;
         }
         
         @media (max-width: 768px) {
           .client-login-page {
-            padding: var(--spacing-md);
+            padding: 1rem;
           }
           
           .client-login-card {
-            padding: var(--spacing-2xl);
+            padding: 2rem;
           }
           
           .client-login-title {

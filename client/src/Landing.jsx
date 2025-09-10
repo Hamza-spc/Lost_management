@@ -103,9 +103,18 @@ function Landing({ logo, language }) {
           <div className="social-links">
             <a href='https://www.instagram.com/sofitelmarrakech' target='_blank' rel='noopener noreferrer' className="social-link" aria-label='Instagram'>
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <rect width="24" height="24" rx="6" fill="var(--primary)"/>
-                <circle cx="12" cy="12" r="5" stroke="white" strokeWidth="2"/>
-                <circle cx="18" cy="6" r="1" fill="white"/>
+                <defs>
+                  <linearGradient id="instagram-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#f09433" />
+                    <stop offset="25%" stopColor="#e6683c" />
+                    <stop offset="50%" stopColor="#dc2743" />
+                    <stop offset="75%" stopColor="#cc2366" />
+                    <stop offset="100%" stopColor="#bc1888" />
+                  </linearGradient>
+                </defs>
+                <rect width="24" height="24" rx="6" fill="url(#instagram-gradient)"/>
+                <circle cx="12" cy="12" r="5" stroke="white" strokeWidth="2" fill="none"/>
+                <circle cx="18" cy="6" r="1.5" fill="white"/>
               </svg>
             </a>
             <a href='https://www.facebook.com/SofitelMarrakech/' target='_blank' rel='noopener noreferrer' className="social-link" aria-label='Facebook'>
@@ -143,12 +152,12 @@ function Landing({ logo, language }) {
         .landing-page {
           position: relative;
           min-height: 100vh;
-          background: var(--white);
+          background: #f5f5f5;
           display: flex;
           flex-direction: column;
           justify-content: flex-start;
           align-items: center;
-          padding: var(--spacing-2xl) var(--spacing-md);
+          padding: 3rem 1rem;
           overflow: hidden;
         }
         
@@ -160,7 +169,7 @@ function Landing({ logo, language }) {
           height: 100vh;
           object-fit: cover;
           z-index: 0;
-          opacity: 0.35;
+          opacity: 0.3;
           pointer-events: none;
         }
         
@@ -184,11 +193,11 @@ function Landing({ logo, language }) {
         
         .hero-section {
           text-align: center;
-          margin-bottom: var(--spacing-3xl);
+          margin-bottom: 4rem;
         }
         
         .landing-title {
-          margin-bottom: var(--spacing-lg);
+          margin-bottom: 1.5rem;
         }
         
         .title-main {
@@ -196,23 +205,35 @@ function Landing({ logo, language }) {
           font-size: 3.5rem;
           font-weight: 800;
           letter-spacing: 3px;
-          background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 50%, var(--primary-light) 100%);
+          background: linear-gradient(135deg, #917143 0%, #bfa100 50%, #d4b800 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
           text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          margin-bottom: var(--spacing-sm);
+          margin-bottom: 0.5rem;
           animation: titleGlow 3s ease-in-out infinite alternate;
+          background-color: rgba(255, 255, 255, 1);
+          padding: 1.5rem 2.5rem;
+          border-radius: 1rem;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+          border: 2px solid rgba(255, 255, 255, 0.5);
         }
         
         .title-subtitle {
           display: block;
           font-size: 1.5rem;
           font-weight: 400;
-          color: var(--gray-600);
+          color: #495057;
           letter-spacing: 1px;
-          margin-bottom: var(--spacing-lg);
-          font-family: var(--font-family-secondary);
+          margin-bottom: 1.5rem;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          background-color: rgba(255, 255, 255, 0.9);
+          padding: 0.75rem 1.5rem;
+          border-radius: 0.75rem;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+          display: inline-block;
         }
         
         .title-decoration {
@@ -225,16 +246,16 @@ function Landing({ logo, language }) {
         .decoration-line {
           width: 60px;
           height: 2px;
-          background: linear-gradient(90deg, transparent, var(--primary), transparent);
-          border-radius: var(--radius-full);
+          background: linear-gradient(90deg, transparent, #bfa100, transparent);
+          border-radius: 9999px;
         }
         
         .decoration-dot {
           width: 8px;
           height: 8px;
-          background: var(--primary);
-          border-radius: var(--radius-full);
-          box-shadow: 0 0 10px var(--primary);
+          background: #bfa100;
+          border-radius: 9999px;
+          box-shadow: 0 0 10px #bfa100;
           animation: pulse 2s infinite;
         }
         
@@ -247,12 +268,17 @@ function Landing({ logo, language }) {
           }
         }
         
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+        
         .login-cards-container {
           display: flex;
-          gap: var(--spacing-2xl);
+          gap: 3rem;
           flex-wrap: wrap;
           justify-content: center;
-          margin-bottom: var(--spacing-3xl);
+          margin-bottom: 4rem;
         }
         
         .login-card {
@@ -262,53 +288,82 @@ function Landing({ logo, language }) {
           flex-direction: column;
           align-items: center;
           text-align: center;
-          padding: var(--spacing-3xl);
+          padding: 3rem;
           background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(10px);
           border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 1.5rem;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+        }
+        
+        .login-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
         
         .card-icon {
-          margin-bottom: var(--spacing-lg);
-          color: var(--primary);
+          margin-bottom: 1.5rem;
+          color: #bfa100;
         }
         
         .login-card h2 {
-          margin-bottom: var(--spacing-md);
+          margin-bottom: 1rem;
           font-size: 1.75rem;
           font-weight: 600;
+          color: #917143;
         }
         
         .login-card p {
-          margin-bottom: var(--spacing-2xl);
-          color: var(--gray-600);
+          margin-bottom: 2rem;
+          color: #495057;
           line-height: 1.6;
           flex-grow: 1;
         }
         
+        .btn-primary {
+          background: #bfa100;
+          color: white;
+          border: none;
+          padding: 1rem 2rem;
+          border-radius: 0.75rem;
+          font-size: 1.125rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(191, 161, 0, 0.3);
+        }
+        
+        .btn-primary:hover {
+          background: #a88a00;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(191, 161, 0, 0.4);
+        }
+        
         .website-section {
           text-align: center;
-          margin-bottom: var(--spacing-2xl);
+          margin-bottom: 3rem;
         }
         
         .website-card {
           display: inline-flex;
           align-items: center;
-          gap: var(--spacing-lg);
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          border-radius: var(--radius-2xl);
-          padding: var(--spacing-xl) var(--spacing-2xl);
-          box-shadow: var(--shadow-lg);
-          transition: all var(--transition-normal);
-          max-width: 500px;
+          gap: 1.5rem;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(15px);
+          border: 2px solid rgba(255, 255, 255, 0.4);
+          border-radius: 1.5rem;
+          padding: 2rem 3rem;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+          transition: all 0.3s ease;
+          max-width: 600px;
         }
         
         .website-card:hover {
-          transform: translateY(-4px);
-          box-shadow: var(--shadow-xl);
-          background: rgba(255, 255, 255, 0.95);
+          transform: translateY(-6px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+          background: rgba(255, 255, 255, 1);
+          border-color: rgba(191, 161, 0, 0.3);
         }
         
         .website-icon {
@@ -326,23 +381,31 @@ function Landing({ logo, language }) {
         }
         
         .website-title {
-          font-size: 1.1rem;
-          font-weight: 600;
-          color: var(--secondary);
-          margin: 0 0 var(--spacing-sm) 0;
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: #917143;
+          margin: 0 0 0.5rem 0;
+          background-color: rgba(255, 255, 255, 0.9);
+          padding: 0.5rem 1rem;
+          border-radius: 0.5rem;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          display: inline-block;
         }
         
         .website-link {
           display: flex;
           align-items: center;
-          gap: var(--spacing-sm);
-          color: var(--primary);
+          gap: 0.5rem;
+          color: #bfa100;
           text-decoration: none;
-          font-weight: 500;
-          transition: all var(--transition-fast);
-          padding: var(--spacing-sm) var(--spacing-md);
-          border-radius: var(--radius-lg);
-          background: rgba(191, 161, 0, 0.05);
+          font-weight: 600;
+          transition: all 0.15s ease-in-out;
+          padding: 0.75rem 1.5rem;
+          border-radius: 0.75rem;
+          background: rgba(191, 161, 0, 0.1);
+          border: 2px solid rgba(191, 161, 0, 0.2);
+          font-size: 1rem;
         }
         
         .website-link:hover {
@@ -367,34 +430,88 @@ function Landing({ logo, language }) {
         
         .social-section {
           text-align: center;
-          margin-bottom: var(--spacing-2xl);
+          margin-bottom: 3rem;
         }
         
         .social-title {
-          font-weight: 600;
-          font-size: 1.2rem;
-          margin-bottom: var(--spacing-md);
-          color: var(--secondary);
+          font-weight: 700;
+          font-size: 1.3rem;
+          margin-bottom: 1.5rem;
+          color: #917143;
+          background-color: rgba(255, 255, 255, 0.9);
+          padding: 0.75rem 1.5rem;
+          border-radius: 0.75rem;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+          display: inline-block;
         }
         
         .social-links {
           display: flex;
           justify-content: center;
-          gap: var(--spacing-xl);
+          gap: 2rem;
         }
         
         .social-link {
           display: inline-block;
-          background: var(--white);
-          border-radius: var(--radius-xl);
-          padding: var(--spacing-md);
-          transition: all var(--transition-normal);
-          box-shadow: var(--shadow-md);
+          background: rgba(255, 255, 255, 0.95);
+          border-radius: 1rem;
+          padding: 1.5rem;
+          transition: all 0.3s ease;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          backdrop-filter: blur(10px);
+        }
+        
+        .social-link svg {
+          width: 40px;
+          height: 40px;
+          transition: transform 0.3s ease;
+        }
+        
+        .social-link:hover svg {
+          transform: scale(1.1);
+        }
+        
+        /* Instagram icon styling - now uses gradient */
+        .social-link:nth-child(1) svg {
+          /* Instagram gradient is defined in the SVG itself */
+        }
+        
+        /* Facebook icon styling */
+        .social-link:nth-child(2) svg {
+          color: #1877F2 !important;
+        }
+        
+        .social-link:nth-child(2) svg rect {
+          fill: #1877F2 !important;
+        }
+        
+        .social-link:nth-child(2) svg path {
+          fill: white !important;
+        }
+        
+        /* Website icon styling */
+        .social-link:nth-child(3) svg {
+          color: #bfa100 !important;
+        }
+        
+        .social-link:nth-child(3) svg rect {
+          fill: #bfa100 !important;
+        }
+        
+        .social-link:nth-child(3) svg circle,
+        .social-link:nth-child(3) svg line,
+        .social-link:nth-child(3) svg path {
+          stroke: white !important;
+          fill: none !important;
         }
         
         .social-link:hover {
-          transform: translateY(-4px);
-          box-shadow: var(--shadow-lg);
+          transform: translateY(-6px);
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+          background: rgba(255, 255, 255, 1);
+          border-color: rgba(191, 161, 0, 0.3);
         }
         
         .review-section {
@@ -402,37 +519,52 @@ function Landing({ logo, language }) {
         }
         
         .review-title {
-          font-weight: 600;
-          font-size: 1.2rem;
-          margin-bottom: var(--spacing-md);
-          color: var(--secondary);
+          font-weight: 700;
+          font-size: 1.3rem;
+          margin-bottom: 1.5rem;
+          color: #917143;
+          background-color: rgba(255, 255, 255, 0.9);
+          padding: 0.75rem 1.5rem;
+          border-radius: 0.75rem;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+          display: inline-block;
         }
         
         .review-links {
           display: flex;
           justify-content: center;
-          gap: var(--spacing-xl);
+          gap: 2rem;
         }
         
         .review-link {
           display: inline-block;
-          background: var(--white);
-          border-radius: var(--radius-xl);
-          padding: var(--spacing-md);
-          transition: all var(--transition-normal);
-          box-shadow: var(--shadow-md);
+          background: rgba(255, 255, 255, 0.95);
+          border-radius: 1rem;
+          padding: 1.5rem;
+          transition: all 0.3s ease;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          backdrop-filter: blur(10px);
         }
         
         .review-link:hover {
-          transform: translateY(-4px);
-          box-shadow: var(--shadow-lg);
+          transform: translateY(-6px);
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+          background: rgba(255, 255, 255, 1);
+          border-color: rgba(191, 161, 0, 0.3);
         }
         
         .review-link img {
-          width: 64px;
-          height: 64px;
-          border-radius: var(--radius-lg);
+          width: 80px;
+          height: 80px;
+          border-radius: 0.75rem;
           object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+        
+        .review-link:hover img {
+          transform: scale(1.1);
         }
         
         @media (max-width: 768px) {

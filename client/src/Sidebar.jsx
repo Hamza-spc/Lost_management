@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { t } from './i18n';
 
-const Sidebar = ({ language, setLanguage }) => {
-  const [open, setOpen] = useState(false);
+const Sidebar = ({ language, setLanguage, onToggle }) => {
+  const [open, setOpen] = useState(false); // Start with sidebar closed
+  
+  const handleToggle = () => {
+    const newOpen = !open;
+    setOpen(newOpen);
+    if (onToggle) onToggle(newOpen);
+  };
 
   return (
     <>
       {/* Sidebar Toggle Button */}
       <button
-        onClick={() => setOpen(!open)}
+        onClick={handleToggle}
         style={{
           position: 'fixed',
           top: 24,
@@ -34,7 +40,7 @@ const Sidebar = ({ language, setLanguage }) => {
       {/* Sidebar Overlay */}
       {open && (
         <div
-          onClick={() => setOpen(false)}
+          onClick={handleToggle}
           style={{
             position: 'fixed',
             top: 0,
@@ -51,21 +57,22 @@ const Sidebar = ({ language, setLanguage }) => {
         style={{
           position: 'fixed',
           top: 0,
-          left: open ? 0 : -260,
-          width: 260,
+          left: open ? 0 : -280,
+          width: 280,
           height: '100vh',
           background: '#fff',
-          boxShadow: '2px 0 16px rgba(191,161,0,0.10)',
+          boxShadow: '2px 0 16px rgba(191,161,0,0.15)',
           zIndex: 2002,
           transition: 'left 0.3s cubic-bezier(.4,0,.2,1)',
-          display: 'flex',
+          display: open ? 'flex' : 'none',
           flexDirection: 'column',
           padding: '2rem 1.5rem',
+          borderRight: '2px solid #bfa100',
         }}
       >
         {/* Close Button */}
         <button
-          onClick={() => setOpen(false)}
+          onClick={handleToggle}
           style={{
             alignSelf: 'flex-end',
             background: 'none',

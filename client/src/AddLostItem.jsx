@@ -87,85 +87,278 @@ function AddLostItem({ logo, language }) {
   };
 
   return (
-    <div style={{minHeight: '100vh', background: 'linear-gradient(135deg, #fffbe6 0%, #bfa100 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', padding: '3rem 1rem'}}>
-      <img src={logo} alt='Hotel Logo' style={{width: '160px', marginBottom: '2rem'}} />
+    <div style={{
+      minHeight: '100vh', 
+      background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'flex-start', 
+      padding: '1rem 0.5rem',
+      margin: 0,
+      width: '100%'
+    }}>
+      <img src={logo} alt='Hotel Logo' style={{width: '140px', marginBottom: '1.5rem'}} />
       <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
+        
         .add-lost-item-container {
           background: white;
-          border-radius: 20px;
-          box-shadow: 0 4px 24px rgba(191, 161, 0, 0.15);
-          padding: 3rem 2.5rem;
-          width: 100%;
-          max-width: 500px;
-          margin: 2rem auto;
+          border-radius: 24px;
+          box-shadow: 0 8px 32px rgba(191, 161, 0, 0.12);
+          padding: 2.5rem;
+          width: calc(100% - 1rem);
+          max-width: 600px;
+          margin: 0 auto;
+          animation: fadeInUp 0.6s ease-out;
+          border: 1px solid rgba(191, 161, 0, 0.1);
         }
+        
         .add-lost-item-title {
-          color: rgb(145, 111, 65);
-          font-family: romie, sans-serif;
-          font-weight: bold;
+          color: #bfa100;
+          font-family: 'romie', sans-serif;
+          font-weight: 700;
           text-align: center;
           margin-bottom: 2rem;
-          font-size: 2rem;
+          font-size: 1.75rem;
+          letter-spacing: -0.02em;
         }
+        
         .add-lost-item-label {
-          color: rgb(145, 111, 65);
-          font-family: romie, sans-serif;
-          font-weight: 500;
+          color: #495057;
+          font-family: 'romie', sans-serif;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+          display: block;
+          font-size: 0.95rem;
         }
+        
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+        
+        .form-control {
+          width: 100%;
+          padding: 0.875rem 1rem;
+          font-size: 1rem;
+          border: 2px solid #e9ecef;
+          border-radius: 12px;
+          transition: all 0.2s ease;
+          background: #fff;
+          font-family: inherit;
+        }
+        
+        .form-control:focus {
+          outline: none;
+          border-color: #bfa100;
+          box-shadow: 0 0 0 3px rgba(191, 161, 0, 0.1);
+          background: #fff;
+        }
+        
+        .form-control:disabled {
+          background: #f8f9fa;
+          color: #6c757d;
+          cursor: not-allowed;
+        }
+        
+        textarea.form-control {
+          min-height: 100px;
+          resize: vertical;
+        }
+        
         .add-lost-item-btn {
-          background: #bfa100;
+          background: linear-gradient(135deg, #bfa100 0%, #d4b800 100%);
           color: #fff;
-          font-weight: bold;
+          font-weight: 600;
           border: none;
-          border-radius: 8px;
-          box-shadow: 0 2px 8px rgba(191, 161, 0, 0.10);
-          transition: background 0.2s;
+          border-radius: 12px;
+          padding: 1rem 2rem;
+          font-size: 1.1rem;
+          box-shadow: 0 4px 16px rgba(191, 161, 0, 0.25);
+          transition: all 0.3s ease;
+          cursor: pointer;
+          width: 100%;
+          font-family: 'romie', sans-serif;
+          letter-spacing: 0.02em;
         }
+        
         .add-lost-item-btn:hover {
-          background: #bfa100;
-          color: #fff;
+          background: linear-gradient(135deg, #a88a00 0%, #bfa100 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(191, 161, 0, 0.35);
+        }
+        
+        .add-lost-item-btn:active {
+          transform: translateY(0);
+        }
+        
+        .image-preview {
+          margin-top: 1rem;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .image-preview img {
+          width: 100%;
+          max-width: 300px;
+          height: auto;
+          display: block;
+        }
+        
+        .form-help-text {
+          color: #6c757d;
+          font-size: 0.85rem;
+          margin-top: 0.25rem;
+          font-style: italic;
+        }
+        
+        .required-asterisk {
+          color: #dc3545;
+          margin-left: 2px;
+        }
+        
+        .form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 3rem;
+          margin-bottom: 1.5rem;
+          align-items: start;
+        }
+        
+        @media (max-width: 768px) {
+          .form-row {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+          }
+          
+          .add-lost-item-container {
+            padding: 2rem 1.5rem;
+            margin: 0;
+            width: calc(100% - 0.5rem);
+          }
         }
       `}</style>
-              <div className='add-lost-item-container'>
+      <div className='add-lost-item-container'>
         <h2 className='add-lost-item-title'>{t('addLostItem', language)}</h2>
         <form onSubmit={handleSubmit}>
-          <div className='mb-3'>
-            <label className='add-lost-item-label'>{t('id', language)}</label>
-            <input type='text' className='form-control' value={id} onChange={e => setId(e.target.value)} required style={{backgroundColor: '#f9f9f9'}} />
-            <small style={{color: '#666', fontSize: '0.8rem', marginTop: '0.25rem', display: 'block'}}>Auto-generated unique identifier</small>
+          {/* ID Field */}
+          <div className='form-group'>
+            <label className='add-lost-item-label'>
+              {t('id', language)}<span className='required-asterisk'>*</span>
+            </label>
+            <input 
+              type='text' 
+              className='form-control' 
+              value={id} 
+              onChange={e => setId(e.target.value)} 
+              required 
+              style={{backgroundColor: '#f8f9fa'}} 
+            />
+            <div className='form-help-text'>Auto-generated unique identifier</div>
           </div>
-          <div className='mb-3'>
-            <label className='add-lost-item-label'>{t('title', language)}</label>
-            <input type='text' className='form-control' value={title} onChange={e => setTitle(e.target.value)} required />
+
+          {/* Title Field */}
+          <div className='form-group'>
+            <label className='add-lost-item-label'>
+              {t('title', language)}<span className='required-asterisk'>*</span>
+            </label>
+            <input 
+              type='text' 
+              className='form-control' 
+              value={title} 
+              onChange={e => setTitle(e.target.value)} 
+              required 
+              placeholder="e.g., iPhone 13, Black Wallet, Gold Watch"
+            />
           </div>
-          <div className='mb-3'>
-            <label className='add-lost-item-label'>{t('description', language)}</label>
-            <textarea className='form-control' value={description} onChange={e => setDescription(e.target.value)} required />
+
+          {/* Description Field */}
+          <div className='form-group'>
+            <label className='add-lost-item-label'>
+              {t('description', language)}<span className='required-asterisk'>*</span>
+            </label>
+            <textarea 
+              className='form-control' 
+              value={description} 
+              onChange={e => setDescription(e.target.value)} 
+              required 
+              placeholder="Provide detailed description of the item..."
+            />
           </div>
-          <div className='mb-3'>
-            <label className='add-lost-item-label'>{t('dateLastSeen', language)}</label>
-            <input type='date' className='form-control' value={dateLastSeen} onChange={e => setDateLastSeen(e.target.value)} required />
+
+          {/* Date and Place Row */}
+          <div className='form-row'>
+            <div className='form-group'>
+              <label className='add-lost-item-label'>
+                {t('dateLastSeen', language)}<span className='required-asterisk'>*</span>
+              </label>
+              <input 
+                type='date' 
+                className='form-control' 
+                value={dateLastSeen} 
+                onChange={e => setDateLastSeen(e.target.value)} 
+                required 
+              />
+            </div>
+            <div className='form-group'>
+              <label className='add-lost-item-label'>
+                {t('placeLastSeen', language)}<span className='required-asterisk'>*</span>
+              </label>
+              <input 
+                type='text' 
+                className='form-control' 
+                value={placeLastSeen} 
+                onChange={e => setPlaceLastSeen(e.target.value)} 
+                required 
+                placeholder="e.g., Lobby, Restaurant, Pool Area"
+              />
+            </div>
           </div>
-          <div className='mb-3'>
-            <label className='add-lost-item-label'>{t('placeLastSeen', language)}</label>
-            <input type='text' className='form-control' value={placeLastSeen} onChange={e => setPlaceLastSeen(e.target.value)} required />
-          </div>
+
+          {/* Email Field (for clients only) */}
           {isClient && (
-            <div className='mb-3'>
-              <label className='add-lost-item-label'>{t('emailLabel', language)}</label>
-              <input type='email' className='form-control' value={email} onChange={e => setEmail(e.target.value)} required />
+            <div className='form-group'>
+              <label className='add-lost-item-label'>
+                {t('emailLabel', language)}<span className='required-asterisk'>*</span>
+              </label>
+              <input 
+                type='email' 
+                className='form-control' 
+                value={email} 
+                onChange={e => setEmail(e.target.value)} 
+                required 
+                placeholder="your.email@example.com"
+              />
             </div>
           )}
-          <div className='mb-3'>
+
+          {/* Status Field */}
+          <div className='form-group'>
             <label className='add-lost-item-label'>{t('status', language)}</label>
             {isClient ? (
-              <input type='text' className='form-control' value={t('declaredByClient', language)} disabled />
+              <input 
+                type='text' 
+                className='form-control' 
+                value={t('declaredByClient', language)} 
+                disabled 
+              />
             ) : isStaff ? (
-              <input type='text' className='form-control' value={t('foundByStaff', language)} disabled />
+              <input 
+                type='text' 
+                className='form-control' 
+                value={t('foundByStaff', language)} 
+                disabled 
+              />
             ) : (
               <select className='form-control' value={status} onChange={e => setStatus(e.target.value)}>
                 <option value='Found by staff'>{t('foundByStaff', language)}</option>
@@ -174,8 +367,10 @@ function AddLostItem({ logo, language }) {
               </select>
             )}
           </div>
+
+          {/* Expiration Field (for staff only) */}
           {isStaff && (
-            <div className='mb-3'>
+            <div className='form-group'>
               <label className='add-lost-item-label'>{t('expiration', language)}</label>
               <select className='form-control' value={expiration} onChange={e => setExpiration(e.target.value)}>
                 <option value='1 month'>{t('expiration1Month', language)}</option>
@@ -184,12 +379,28 @@ function AddLostItem({ logo, language }) {
               </select>
             </div>
           )}
-          <div className='mb-3'>
+
+          {/* Image Upload Field */}
+          <div className='form-group'>
             <label className='add-lost-item-label'>{t('imageOptional', language)}</label>
-            <input type='file' className='form-control' accept='image/*' onChange={handleImageChange} />
-            {image && <img src={image} alt='Preview' style={{marginTop: '1rem', maxWidth: '100%', borderRadius: '8px'}} />}
+            <input 
+              type='file' 
+              className='form-control' 
+              accept='image/*' 
+              onChange={handleImageChange} 
+            />
+            <div className='form-help-text'>Upload a photo to help identify the item</div>
+            {image && (
+              <div className='image-preview'>
+                <img src={image} alt='Preview' />
+              </div>
+            )}
           </div>
-          <button type='submit' className='add-lost-item-btn w-100 py-2'>{t('submit', language)}</button>
+
+          {/* Submit Button */}
+          <button type='submit' className='add-lost-item-btn'>
+            {t('submit', language)}
+          </button>
         </form>
       </div>
     </div>

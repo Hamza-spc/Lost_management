@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
+// Temporarily commenting out Bootstrap to fix PostCSS issue
+// import 'bootstrap/dist/css/bootstrap.min.css'
 import Signup from './Signup'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Login from './Login'
@@ -18,10 +19,13 @@ import logoHotel from './assets/logoHotel.png';
 
 function App() {
   const [language, setLanguage] = useState('en');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   return (
-    <BrowserRouter>
-      <Sidebar language={language} setLanguage={setLanguage} />
-      <Routes>
+    <div className={sidebarOpen ? 'sidebar-open' : ''}>
+      <BrowserRouter>
+        <Sidebar language={language} setLanguage={setLanguage} onToggle={setSidebarOpen} />
+        <Routes>
         <Route path='/' element={<Landing logo={logoHotel} language={language} setLanguage={setLanguage} key={language} />}></Route>
         <Route path='/register' element={<Signup logo={logoHotel} language={language} setLanguage={setLanguage} />}></Route>
         <Route path='/login' element={<Login logo={logoHotel} language={language} setLanguage={setLanguage} />}></Route>
@@ -36,6 +40,7 @@ function App() {
         <Route path='/payment-options' element={<PaymentOptions language={language} />}></Route>
       </Routes>
     </BrowserRouter>
+    </div>
   )
   
 }

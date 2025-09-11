@@ -3,9 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const stripe = require('stripe')('sk_test_your_stripe_secret_key_here');
+// Temporarily commenting out passport to fix compatibility issues
+// const passport = require('passport');
+// const GoogleStrategy = require('passport-google-oauth20').Strategy;
+// Temporarily commenting out stripe to fix compatibility issues
+// const stripe = require('stripe')('sk_test_your_stripe_secret_key_here');
 const EmployeeModel = require('./models/Employee');
 const LostItemModel = require('./models/LostItem');
 const ClientModel = require('./models/Client');
@@ -29,28 +31,33 @@ app.use(session({
   }
 }));
 
-// Passport configuration
-app.use(passport.initialize());
-app.use(passport.session());
+// Passport configuration - temporarily disabled
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 
 
 // Connect to MongoDB first, then start server
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/employee', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log('Connected to MongoDB');
-  // Start server only after MongoDB connection is successful
-  app.listen(3001, () => {
-    console.log('Server is running on port 3001');
-  });
-})
-.catch((err) => {
-  console.error('MongoDB connection error:', err);
-  process.exit(1);
-});
+async function startServer() {
+  try {
+    console.log('Attempting to connect to MongoDB...');
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/employee', {
+      serverSelectionTimeoutMS: 5000, // 5 second timeout
+      socketTimeoutMS: 45000, // 45 second timeout
+    });
+    console.log('Connected to MongoDB');
+    
+    // Start server only after MongoDB connection is successful
+    app.listen(3001, () => {
+      console.log('Server is running on port 3001');
+    });
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+  }
+}
+
+startServer();
     
 
 app.post('/login', (req, res) => {
@@ -324,25 +331,25 @@ app.post('/api/lost-items/:id/delivery', async (req, res) => {
     }
 });
 
-// Create payment intent
-app.post('/api/payment/create-payment-intent', async (req, res) => {
-    try {
-        const { amount, itemId, deliveryId } = req.body;
+// Create payment intent - temporarily disabled
+// app.post('/api/payment/create-payment-intent', async (req, res) => {
+//     try {
+//         const { amount, itemId, deliveryId } = req.body;
 
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: amount,
-            currency: 'usd',
-            metadata: {
-                itemId: itemId,
-                deliveryId: deliveryId
-            }
-        });
+//         const paymentIntent = await stripe.paymentIntents.create({
+//             amount: amount,
+//             currency: 'usd',
+//             metadata: {
+//                 itemId: itemId,
+//                 deliveryId: deliveryId
+//             }
+//         });
 
-        res.json({ clientSecret: paymentIntent.client_secret });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+//         res.json({ clientSecret: paymentIntent.client_secret });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// });
 
 // Update lost item status (for staff)
 app.patch('/api/lost-items/:id/status', async (req, res) => {

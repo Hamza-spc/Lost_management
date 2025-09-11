@@ -388,6 +388,16 @@ p {
   100% { transform: rotate(360deg); }
 }
 
+/* Sidebar Layout */
+.landing-page {
+  margin-left: 0;
+  transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+.sidebar-open .landing-page {
+  margin-left: 280px;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

@@ -48,8 +48,10 @@ async function startServer() {
     console.log('Connected to MongoDB');
     
     // Start server only after MongoDB connection is successful
-    app.listen(3001, () => {
-      console.log('Server is running on port 3001');
+    const PORT = process.env.PORT || 3001;
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server is running on port ${PORT}`);
+      console.log(`Access at: http://localhost:${PORT}`);
     });
   } catch (err) {
     console.error('MongoDB connection error:', err);

@@ -2,6 +2,17 @@
 
 A comprehensive full-stack web application for managing lost and found items with advanced features including client authentication, AI-powered tools, payment processing, and automated notifications. Built with React (frontend) and Node.js/Express/MongoDB (backend).
 
+## Screenshots
+
+<img width="943" height="1280" alt="1782123449004" src="https://github.com/user-attachments/assets/8ba963a0-209f-4b69-8fdb-e8a1718152fe" />
+
+
+<img width="1599" height="984" alt="1782123447215" src="https://github.com/user-attachments/assets/903d5e90-6b0c-4547-a0d3-772293e928cb" />
+
+
+<img width="1009" height="1280" alt="1782123447441" src="https://github.com/user-attachments/assets/f8b1a9e4-37f6-42b0-868d-b44426b2a952" />
+
+
 ## 🚀 Features
 
 ### 🔐 Authentication & User Management
